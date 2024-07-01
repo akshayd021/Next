@@ -8,14 +8,28 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const router = useRouter();
 
-   useEffect(()=>{
-    if(localStorage.getItem('token')){
-      router.push('/')
+  useEffect(() => {
+    // Check if token exists in localStorage
+    if (localStorage.getItem("token")) {
+      // Redirect to home page if token exists
+      router.push("/");
     }
-   },[])
+  }, [router]);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    if (email === '' || password === '') {
+      toast.error("Please enter email and password!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+      });
+      return;
+    }
     try {
       const response = await fetch("http://localhost:3000/api/login", {
         method: "POST",
@@ -28,23 +42,44 @@ const Login = () => {
         }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        toast.error(data.error || "Login failed. Please try again!", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+        });
+
+      } else {
+        localStorage.setItem("token", data.token); // Store token in localStorage
+        localStorage.setItem("userEmail", email);
+         // Store user email in localStorage
+        toast.success("Login success!", {
+          position: "top-right",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+        });
+        setEmail("");
+        setPassword("");
+        router.push("/"); // Redirect to home page after successful login
       }
-      setEmail("");
-      setPassword("");
-      localStorage.setItem("token", response?.token);
-      toast.success(" Login success!", {
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("Internal server error. Please try again later!", {
         position: "top-right",
         autoClose: 2000,
-        hideProgressBar: true,
+        hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: false,
         draggable: true,
       });
-      router.push("/");
-    } catch (error) {
-      console.error("Error:", error);
     }
   };
 

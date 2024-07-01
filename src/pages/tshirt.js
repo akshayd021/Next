@@ -9,8 +9,11 @@ const Tshirt = ({ products }) => {
       <section className="text-gray-600 body-font md:px-20 sm:px-2">
         <div className="container px-5 py-24 mx-auto">
           <div className="md:flex flex-wrap -m-4">
+          {Object.keys(products)?.length === 0 && (
+              <p className="text-center m-auto">Tshirt  are not available!</p>
+            )}
             {Object.keys(products)?.map((item, index) => (
-              <div key={index} className="lg:w-1/4 md:w-1/2 p-4">
+              <div key={index} className="lg:w-1/4 md:w-1/2  p-4">
                 <Link href={`/product/${products[item]?.slug}`}>
                   <div className="h-full border-2 border-gray-200 border-opacity-60 rounded-lg overflow-hidden shadow-md cursor-pointer">
                     <img
@@ -18,6 +21,8 @@ const Tshirt = ({ products }) => {
                       src={products[item]?.img}
                       alt={products[item]?.title}
                     />
+                 
+
                     <div className="p-1 mx-2">
                       <h3 className="tracking-widest text-xs title-font mb-1 text-gray-500">
                         {products[item]?.category}

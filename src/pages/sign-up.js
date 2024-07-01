@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -6,7 +7,7 @@ const SignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const router = useRouter()
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -27,7 +28,6 @@ const SignUp = () => {
         throw new Error("Network response was not ok");
       }
 
-      console.log("Sign up successful!");
 
       setName("");
       setEmail("");
@@ -40,6 +40,7 @@ const SignUp = () => {
         pauseOnHover: false, 
         draggable: true 
       });
+      router.push('/login')
     } catch (error) {
       console.error("Error:", error);
     }
